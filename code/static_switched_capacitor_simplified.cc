@@ -11,6 +11,7 @@
 #include <sstream>
 #include <fstream>
 #include "static_buck.h"
+#include <math.h>
 
 using namespace std;
 
@@ -71,7 +72,7 @@ double C_density = 0.05;
 C_density = Read_in_Technology(11);
 cout << "C_density: " << C_density << endl;
 
-double Loop_inductance = 0.000000000001*0.000001*100/Area;
+double Loop_inductance = 0.000000000001*100*0.000001/Area;
 
 
 //boundary setting
@@ -119,8 +120,9 @@ double P_L_Inductance;
 double Delta_i;
 double Delta_v;
 double R_L_Inductance;
-
-
+double R_SSL;
+double R_FSL;
+double P_loss;
 
 
 
@@ -209,13 +211,27 @@ for(F_sw = F_min; F_sw <= F_max; F_sw = F_sw + F_sw_step)
 									if(Delta_v <= V_out * Delta_v_range)
 									{
                                                                                 R_L_Inductance = 4*Loop_inductance*F_sw/(D*D);
-                                                                                P_L_Inductance = I_load * I_load * R_L_Inductance;
+                                                                                
+                                                                                R_SSL = 6*D*D/(F_sw*C);
+                                                                                R_FSL = 6*2*D*R_sw/(W_sw_hi + W_sw_low);
+
+                                                                                P_loss = I_c * I_c * power(R_L_Inductance*R_L_Inductance+R_SSL*R_SSL+R_FSL*R_FSL,0.5);
+
 										P_driver = ((C_bridge+C_driver)*(W_sw_hi+W_sw_low))*V_driver*F_sw;
 										P_control = I_control*V_driver;
-										P_sw = I_c*I_c*R_sw*M_sw/(W_sw_hi + W_sw_low);
-										P_c = I_c * Delta_v/2;
-										Converter_power = (P_driver + P_control + P_sw + P_c)*N + P_L_Inductance;
-										Efficiency_tep = P_load/(P_load + Converter_power);
+										
+                                                                                Converter_power = (P_driver + P_control + P_loss)*N;
+                                                                                Efficiency_tep = P_load/(P_load + Converter_power);
+
+                                                                                //Phuc's solution
+                                                                                //P_sw = I_c*I_c*R_sw*M_sw/(W_sw_hi + W_sw_low);
+										//P_c = I_c * Delta_v/2;
+                                                                                //R_L_Inductance = 4*Loop_inductance*F_sw/(D*D);
+                                                                                //P_L_Inductance = I_load * I_load * R_L_Inductance;
+										//P_driver = ((C_bridge+C_driver)*(W_sw_hi+W_sw_low))*V_driver*F_sw;
+										//P_control = I_control*V_driver;
+										//Converter_power = (P_driver + P_control + P_sw + P_c)*N + P_L_Inductance;
+										//Efficiency_tep = P_load/(P_load + Converter_power);
 
 										if(Efficiency_tep > Efficiency)
 										{
@@ -314,14 +330,28 @@ for(F_sw = F_min; F_sw <= F_max; F_sw = F_sw + F_sw_step)
 									if(Delta_v <= V_out * Delta_v_range)
 									{
 
-										R_L_Inductance = 4*Loop_inductance*F_sw/(D*D);
-                                                                                P_L_Inductance = I_load * I_load * R_L_Inductance;
+                                                                                R_L_Inductance = 4*Loop_inductance*F_sw/(D*D);
+                                                                                
+                                                                                R_SSL = 6*D*D/(F_sw*C);
+                                                                                R_FSL = 6*2*D*R_sw/(W_sw_hi + W_sw_low);
+
+                                                                                P_loss = I_load * I_load * power(R_L_Inductance*R_L_Inductance+R_SSL*R_SSL+R_FSL*R_FSL,0.5);
+
 										P_driver = ((C_bridge+C_driver)*(W_sw_hi+W_sw_low))*V_driver*F_sw;
 										P_control = I_control*V_driver;
-										P_sw = I_c*I_c*R_sw*M_sw/(W_sw_hi + W_sw_low);
-										P_c = I_c * Delta_v/2;
-										Converter_power = (P_driver + P_control + P_sw + P_c)*N + P_L_Inductance;
-										Efficiency_tep = P_load/(P_load + Converter_power);
+										
+                                                                                Converter_power = (P_driver + P_control + P_loss)*N;
+                                                                                Efficiency_tep = P_load/(P_load + Converter_power);
+
+                                                                                //Phuc's solution
+                                                                                //P_sw = I_c*I_c*R_sw*M_sw/(W_sw_hi + W_sw_low);
+										//P_c = I_c * Delta_v/2;
+                                                                                //R_L_Inductance = 4*Loop_inductance*F_sw/(D*D);
+                                                                                //P_L_Inductance = I_load * I_load * R_L_Inductance;
+										//P_driver = ((C_bridge+C_driver)*(W_sw_hi+W_sw_low))*V_driver*F_sw;
+										//P_control = I_control*V_driver;
+										//Converter_power = (P_driver + P_control + P_sw + P_c)*N + P_L_Inductance;
+										//Efficiency_tep = P_load/(P_load + Converter_power);
 
 										if(Efficiency_tep > Efficiency)
 										{

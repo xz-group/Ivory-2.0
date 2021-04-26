@@ -25,11 +25,12 @@ extern int *ret;
 int main()
 {
   //----------------Static Optimization-----------------
-  Static_Buck(double Vin, double Vout, double P, double Area_buget, double ripple, double Efficiency_buget, int Optimization_Target 0 for efficiency 1 for area)
-  Static_Buck(1.8, 1, 15, 400, 0.01, 0.8, 0);
+  //Static_Buck(double Vin, double Vout, double P, double Area_buget, double ripple, double Efficiency_buget, int Optimization_Target 0 for efficiency 1 for area)
+  //Static_Buck(1.8, 1, 15, 400, 0.01, 0.8, 0);
+  Static_Buck(3.3, 1, 20, 200, 0.01, 0.7, 0);
 
   // Static_Switched_Capacitor(double Vin, double Vout, double P, double Area_buget, double ripple, double Efficiency_buget, int Optimization_Target 0 for efficiency 1 for area)
-  //Static_Switched_Capacitor(3.3, 1, 20, 200, 0.01, 0.7, 0);
+  //Static_Switched_Capacitor(3.3, 1, 20, 100, 0.01, 0.01, 0);
 
 
 
@@ -39,7 +40,7 @@ int main()
   //citcuit_simulator_instruction("OnChipPDN.cir");
   //set load period and simulation time in ps
   //setperiod_load_ivr_Simulation(1400, 3000000);
-  /start_simulation();
+  start_simulation();
 
   return 0;
 }

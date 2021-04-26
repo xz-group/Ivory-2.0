@@ -80,7 +80,7 @@ cout << "R_ind: " << R_ind << endl;
 double R_sw = 0.001;
 R_sw = Read_in_Technology(5);
 cout << "R_sw: " << R_sw << endl;
-double Area_driver = 1*0.000001;
+double Area_driver = 1*0.00001;
 Area_driver = Read_in_Technology(6);
 cout << "Area_driver: " << Area_driver << endl;
 double Leak_sw = 0.5;
